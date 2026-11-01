@@ -23,40 +23,7 @@
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; min-height: 100dvh; }
 
-    .app-header {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 16px;
-      background: linear-gradient(110deg, #06b6d4, #3b82f6 55%, #8b5cf6);
-      color: white;
-      box-shadow: 0 4px 16px #1e3a8a33;
-    }
-
-    h1 { margin: 0; font-size: 1rem; line-height: 1.4; }
-    .actions { display: flex; align-items: center; gap: 8px; }
-
-    .actions a, .actions button {
-      min-height: 40px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #ffffff80;
-      border-radius: 999px;
-      padding: 8px 14px;
-      background: #ffffff24;
-      color: white;
-      font: inherit;
-      font-size: .875rem;
-      text-decoration: none;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .actions a:hover, .actions button:hover { background: #ffffff40; }
-    main { position: relative; height: calc(100vh - 64px); height: calc(100dvh - 64px); }
+    main { position: relative; height: 100vh; height: 100dvh; }
     iframe { display: block; width: 100%; height: 100%; border: 0; background: white; }
 
     .loading {
@@ -75,22 +42,9 @@
     .loading.hidden { display: none; }
     .loading a { color: #1d4ed8; pointer-events: auto; }
 
-    @media (max-width: 520px) {
-      .app-header { padding-inline: 10px; }
-      h1 { max-width: 48vw; font-size: .875rem; }
-      .actions { gap: 6px; }
-      .actions a, .actions button { padding-inline: 10px; font-size: .75rem; }
-    }
   </style>
 </head>
 <body>
-  <header class="app-header">
-    <h1>ระบบแจ้งปฏิทินการปฏิบัติงาน</h1>
-    <nav class="actions" aria-label="เมนูแอป">
-      <button id="installButton" type="button">ติดตั้ง / เพิ่มทางลัด</button>
-      <a href="https://script.google.com/macros/s/AKfycbyERKSLPiL8MwSwbej7orKGLCQm1LlVV4sBPNtP7vajljbYxyRUvnuQbwbT4t8gl8utVQ/exec" target="_blank" rel="noopener">เปิดแท็บใหม่</a>
-    </nav>
-  </header>
   <main>
     <div id="loading" class="loading" role="status">
       <strong>กำลังเปิดระบบ...</strong>
@@ -104,39 +58,8 @@
       referrerpolicy="strict-origin-when-cross-origin"></iframe>
   </main>
   <script>
-    const installButton = document.getElementById('installButton');
-    let installPrompt;
-
     document.getElementById('appFrame').addEventListener('load', () => {
       document.getElementById('loading').classList.add('hidden');
-    });
-
-    window.addEventListener('beforeinstallprompt', event => {
-      event.preventDefault();
-      installPrompt = event;
-      installButton.textContent = 'ติดตั้งแอป';
-    });
-
-    window.addEventListener('appinstalled', () => {
-      installPrompt = null;
-      installButton.textContent = 'ติดตั้งแล้ว';
-      installButton.disabled = true;
-    });
-
-    installButton.addEventListener('click', async () => {
-      if (installPrompt) {
-        installPrompt.prompt();
-        await installPrompt.userChoice;
-        installPrompt = null;
-        return;
-      }
-
-      const isAppleMobile = /iPhone|iPad|iPod/.test(navigator.userAgent)
-        || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      const instructions = isAppleMobile
-        ? 'บน iPhone/iPad ให้เปิดลิงก์นี้ใน Safari แตะปุ่มแชร์ แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”'
-        : 'เปิดเมนูของเบราว์เซอร์ แล้วเลือก “ติดตั้งแอป” หรือ “เพิ่มไปยังหน้าจอหลัก”';
-      window.alert(instructions);
     });
 
     if ('serviceWorker' in navigator) {
