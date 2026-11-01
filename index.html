@@ -42,6 +42,22 @@
     .loading.hidden { display: none; }
     .loading a { color: #1d4ed8; pointer-events: auto; }
 
+    .direct {
+      position: fixed;
+      left: 8px;
+      bottom: calc(8px + env(safe-area-inset-bottom));
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-content: center;
+      border-radius: 50%;
+      background: rgba(23, 37, 84, .55);
+      color: #fff;
+      font-size: 16px;
+      text-decoration: none;
+      z-index: 10;
+    }
+
   </style>
 </head>
 <body>
@@ -57,21 +73,18 @@
       allow="clipboard-read; clipboard-write"
       referrerpolicy="strict-origin-when-cross-origin"></iframe>
   </main>
+  <a class="direct" href="./?direct=1" title="เปิดระบบแบบเต็มหน้าจอ" aria-label="เปิดระบบแบบเต็มหน้าจอ">&#x2197;</a>
   <script>
     const APP_URL = 'https://script.google.com/macros/s/AKfycbyERKSLPiL8MwSwbej7orKGLCQm1LlVV4sBPNtP7vajljbYxyRUvnuQbwbT4t8gl8utVQ/exec';
-    const params = new URLSearchParams(location.search);
-    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
-      (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
 
-    // มือถือบล็อกคุกกี้ของบุคคลที่สามใน iframe จึงเปิด Apps Script โดยตรงแทน
-    if (isMobile && !params.has('embed')) {
-      document.getElementById('appFrame').remove();
+    // ใส่ ?direct=1 เพื่อเปิด Apps Script โดยตรง (ใช้เมื่อเบราว์เซอร์บางตัวไม่แสดงแบบฝัง)
+    if (new URLSearchParams(location.search).has('direct')) {
       location.replace(APP_URL);
-    } else {
-      document.getElementById('appFrame').addEventListener('load', () => {
-        document.getElementById('loading').classList.add('hidden');
-      });
     }
+
+    document.getElementById('appFrame').addEventListener('load', () => {
+      document.getElementById('loading').classList.add('hidden');
+    });
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
