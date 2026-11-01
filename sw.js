@@ -1,4 +1,4 @@
-const CACHE_NAME = 'school-event-pwa-v2';
+const CACHE_NAME = 'school-event-pwa-v3';
 const APP_SHELL = [
   new URL('./', self.registration.scope).href,
   new URL('./manifest.webmanifest', self.registration.scope).href,
