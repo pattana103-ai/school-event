@@ -58,9 +58,20 @@
       referrerpolicy="strict-origin-when-cross-origin"></iframe>
   </main>
   <script>
-    document.getElementById('appFrame').addEventListener('load', () => {
-      document.getElementById('loading').classList.add('hidden');
-    });
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbyERKSLPiL8MwSwbej7orKGLCQm1LlVV4sBPNtP7vajljbYxyRUvnuQbwbT4t8gl8utVQ/exec';
+    const params = new URLSearchParams(location.search);
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+
+    // มือถือบล็อกคุกกี้ของบุคคลที่สามใน iframe จึงเปิด Apps Script โดยตรงแทน
+    if (isMobile && !params.has('embed')) {
+      document.getElementById('appFrame').remove();
+      location.replace(APP_URL);
+    } else {
+      document.getElementById('appFrame').addEventListener('load', () => {
+        document.getElementById('loading').classList.add('hidden');
+      });
+    }
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
